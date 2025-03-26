@@ -198,7 +198,7 @@
         var formData = new FormData($("#student-form")[0]); 
         console.log(formData);
         $.ajax({
-            url: "<?= base_url('Student/store'); ?>",
+            url: "<?= base_url('Student/saveStudent'); ?>",
             type: "POST",
             data: formData,
             processData: false,
@@ -218,14 +218,6 @@
                     window.location.href = "<?= base_url('Student/index'); ?>";
                 }
                 
-                if(response.exist){
-                    alert(response.exist);
-                    window.location.href = "<?= base_url('Student/index'); ?>"; 
-                }
-                if(response.message){
-                    alert(response.message);
-                    window.location.href = "<?= base_url('Student/index'); ?>"; 
-                }
             },
             error: function(xhr, status, error) {
                 console.error("AJAX Error:", xhr.responseText);

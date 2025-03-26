@@ -35,5 +35,20 @@ class Student_model extends CI_Model {
 
         return false;
     }
+
+    public function getStudentData($where) {
+        $query = $this->db->get_where('students', $where);
+        return $query->row_array();
+    }
+
+    public function getStudentYearlyData($where) {
+         $query = $this->db->get_where('students', $where);
+        return $query->result_array();
+    }
+
+    public function CheckSemester($where) {
+        return $this->db->where($where)->get('students')->row_array();
+    }
+    
 }
 

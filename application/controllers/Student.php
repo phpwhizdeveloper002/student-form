@@ -16,7 +16,7 @@ class Student extends CI_Controller {
 		$this->load->view('student_list');
 	}
 
-    public function store() {
+    public function saveStudent() {
         header('Content-Type: application/json');
         log_message('debug', 'POST Data: ' . json_encode($this->input->post()));
     
@@ -46,45 +46,56 @@ class Student extends CI_Controller {
         }
     
         $formData = $this->input->post();
-        $formData['created_at'] = date('Y-m-d H:i:s');
 
-        // total of subject
-        $sub1 = isset($formData['sub1']) ? (float)$formData['sub1'] : 0;
-        $sub2 = isset($formData['sub2']) ? (float)$formData['sub2'] : 0;
-        $sub3 = isset($formData['sub3']) ? (float)$formData['sub3'] : 0;
+        if(!empty($formData)){
 
-        // Calculate the total
-        $formData['total'] = $sub1 + $sub2 + $sub3;
-        $formData['percentage'] = ($formData['total'] / 300) * 100;
+            $formData['created_at'] = date('Y-m-d H:i:s');
 
-        // grade here.
-        if ($formData['percentage'] >= 70) {
-            $formData['grade'] = 'O';
-        } elseif ($formData['percentage'] >= 60) {
-            $formData['grade'] = 'A';
-        } elseif ($formData['percentage'] >= 50) {
-            $formData['grade'] = 'B';
-        } elseif ($formData['percentage'] >= 40) {
-            $formData['grade'] = 'C';
-        } else {
-            $formData['grade'] = 'F';
+            // total of subject
+            $sub1 = isset($formData['sub1']) ? (float)$formData['sub1'] : 0;
+            $sub2 = isset($formData['sub2']) ? (float)$formData['sub2'] : 0;
+            $sub3 = isset($formData['sub3']) ? (float)$formData['sub3'] : 0;
+
+            // Calculate the total
+            $formData['total'] = $sub1 + $sub2 + $sub3;
+            
+            if(!empty($formData['total'])){
+                $formData['percentage'] = ($formData['total'] / 300) * 100;
+            }
+
+            // grade here.
+            if(!empty($formData['percentage'])){
+                if ($formData['percentage'] >= 70) {
+                    $formData['grade'] = 'O';
+                } elseif ($formData['percentage'] >= 60) {
+                    $formData['grade'] = 'A';
+                } elseif ($formData['percentage'] >= 50) {
+                    $formData['grade'] = 'B';
+                } elseif ($formData['percentage'] >= 40) {
+                    $formData['grade'] = 'C';
+                } else {
+                    $formData['grade'] = 'F';
+                }
+            }
+            
+
+            $where = ['sid' => $formData['sid'], 'sam' => $formData['sam']];
+            $is_exist = $this->Student_model->CheckSemester($where);
+
+            if($is_exist){
+                echo json_encode(['exist' => 'This semaster is complete please select other semaster!']);
+                exit;
+            }
+
+            $inserted = $this->Student_model->insert_data($formData);
+        
+            if ($inserted) {
+                echo json_encode(['message' => 'Form submitted successfully!']);
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Failed to submit form!']);
+            }
         }
-
-        $query = $this->db->get_where('students', ['sid' => $formData['sid'], 'sam' => $formData['sam']]);
-        $is_exist = $query->row_array();
-
-        if($is_exist){
-            echo json_encode(['exist' => 'This semaster is complete please select other semaster!']);
-            exit;
-        }
-
-        $inserted = $this->Student_model->insert_data($formData);
-    
-        if ($inserted) {
-            echo json_encode(['message' => 'Form submitted successfully!']);
-        } else {
-            echo json_encode(['success' => false, 'message' => 'Failed to submit form!']);
-        }
+        
     }
 
     public function fetchData()
@@ -98,14 +109,23 @@ class Student extends CI_Controller {
         header('Content-Type: application/json');
         $studentId = $this->input->get('studentId'); 
 
-        $query = $this->db->get_where('students', ['id' => $studentId]);
-        $studentData = $query->row_array();
+        if(!empty($studentId)) {
+            $where =  ['id' => $studentId];
+            $resultData = $this->Student_model->getStudentData($where);
 
-        if ($studentData) {
-            echo json_encode(['success' => true, 'data' => $studentData]);
-        } else {
-            // Return failure response
-            echo json_encode(['success' => false]);
+            if(!empty($resultData)) {
+                $studentData = [
+                    'success' => true,
+                    'data' => $resultData
+                ];
+            }
+
+            // echo json_encode($studentData);
+            if ($studentData) {
+                echo json_encode($studentData);
+            } else {
+                echo json_encode(['success' => false]);
+            }
         }
     }
 
@@ -113,35 +133,31 @@ class Student extends CI_Controller {
         header('Content-Type: application/json');
         $studentSid = $this->input->get('studentSid'); 
 
-        $query = $this->db->get_where('students', ['sid' => $studentSid]);
-        $studentData = $query->result_array();
+        $where =  ['sid' => $studentSid];
+        $studentData = $this->Student_model->getStudentYearlyData($where);
 
-        $totalPercentage = 0;
-        $totalStudents = count($studentData);
+        if(!empty($studentData)) {
+            $totalPercentage = 0;
+            $totalStudents = count($studentData);
 
-        // foreach ($studentData as $student) {
-        //     $totalPercentage += $student['percentage']; 
-        // }
-
-        foreach ($studentData as $student) {
-            if ($student['grade'] === 'F') {
-                // If the grade is 'F', set averagePercentage to 0 and break the loop
-                $averagePercentage = 0;
-                break;
-            } else {
-                $totalPercentage += $student['percentage'];
+            foreach ($studentData as $student) {
+                if ($student['grade'] === 'F') {
+                    $averagePercentage = 0;
+                    break;
+                } else {
+                    $totalPercentage += $student['percentage'];
+                }
             }
+
+            $averagePercentage = $totalStudents > 0 ? $totalPercentage / $totalStudents : 0;
         }
+        
+        $data = [
+            'success' => true, 'data' => $studentData, 'yearlyAvgPercentages' => $averagePercentage
+        ];
 
-        $averagePercentage = $totalStudents > 0 ? $totalPercentage / $totalStudents : 0;
-
-        // echo "<pre>";
-        // print_r($studentData);
-        // echo "</pre>";
-        // die();
-
-        if ($studentData) {
-            echo json_encode(['success' => true, 'data' => $studentData, 'yearlyAvgPercentages' => $averagePercentage]);
+        if ($data) {
+            echo json_encode($data);
         } else {
             // Return failure response
             echo json_encode(['success' => false]);

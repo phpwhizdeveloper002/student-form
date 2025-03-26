@@ -51,14 +51,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             <tr>
             <th scope="col">No.</th>
             <th scope="col">SID.</th>
-            <!-- <th scope="col">Name</th>
-            <th scope="col">subject 1</th>
-            <th scope="col">subject 2</th>
-            <th scope="col">subject 3</th>
-            <th scope="col">Total</th>
-            <th scope="col">Percentage</th>
-            <th scope="col">Grade</th>
-            <th scope="col">Semaster</th> -->
             <th scope="col">Action</th>
             </tr>
         </thead>
@@ -98,15 +90,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 <th scope="row">${item.id}</th>
                                 <th>${item.sid}</th>
                                 <td>${item.name}</td>
-                                <?php /*
-                                <td>${item.sub1}</td>
-                                <td>${item.sub2}</td>
-                                <td>${item.sub3}</td>
-                                <td>${item.total}</td>
-                                <td>${item.percentage}</td>
-                                <td>${item.grade}</td>
-                                <td>${item.sam}</td>
-                                */ ?>
                                 <td>
                                    <?php /* <button class="btn btn-warning" onclick="studentResult(${item.id})">View result</button> */ ?>
                                     <button class="btn btn-warning" onclick="studentYearlyResult(${item.sid})">Yearly result</button>
