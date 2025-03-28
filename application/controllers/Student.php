@@ -163,4 +163,61 @@ class Student extends CI_Controller {
             echo json_encode(['success' => false]);
         }
     }
+
+    public function ajaxSaveStudent() {
+
+        $data['company'] = "AsdfFasdf";
+        
+        echo $this->load->view('modal/add_studnet_popup', $data, true);
+    }  
+    
+    public function viewStudentResult() {
+        $studentId = $this->input->get('studentId'); 
+
+        if(!empty($studentId)) {
+            $where =  ['id' => $studentId];
+            $resultData = $this->Student_model->getStudentData($where);
+
+            if(!empty($resultData)) {
+                $studentData = [
+                    'success' => true,
+                    'data' => $resultData
+                ];
+            }
+
+           echo $this->load->view('modal/view_studnet_yearly_result_popup', $data, true);
+        }
+    }
+
+    public function viewStudentYearlyResultPopup()
+    {
+        $studentSid = $this->input->post('studentSid');
+
+        $where =  ['sid' => $studentSid];
+        $studentData = $this->Student_model->getStudentYearlyData($where);
+
+        if(!empty($studentData)) {
+            $totalPercentage = 0;
+            $totalStudents = count($studentData);
+
+            foreach ($studentData as $student) {
+                if ($student['grade'] === 'F') {
+                    $averagePercentage = 0;
+                    break;
+                } else {
+                    $totalPercentage += $student['percentage'];
+                }
+            }
+
+            $averagePercentage = $totalStudents > 0 ? $totalPercentage / $totalStudents : 0;
+        }     
+        
+        $data = [
+            'studentData' => $studentData,
+            'averagePercentage' => $averagePercentage
+        ];
+
+        echo $this->load->view('modal/view_studnet_yearly_result_popup', $data, true);
+    }
+    
 }

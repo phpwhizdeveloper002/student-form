@@ -32,6 +32,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <div class="container">
     <div class="text-end">
         <button class="btn btn-success" onclick="addNewStudentPopup()">Add student</button>
+        <!-- <button class="btn btn-success" onclick="addStudentPopup()">Add New student</button> -->
     </div>
 
     <?php if ($this->session->flashdata('error_message')): ?>
@@ -70,6 +71,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <?php $this->load->view('modal/yearly_result_model'); ?>
 
 <div class="modal hide fade px-3" id="addNewClinicPopup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"></div>
+<div class="modal hide fade px-3" id="studentYearlyResultPopup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"></div>
+<div class="modal hide fade px-3" id="studentResultPopup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
@@ -92,7 +95,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 <td>${item.name}</td>
                                 <td>
                                    <?php /* <button class="btn btn-warning" onclick="studentResult(${item.id})">View result</button> */ ?>
-                                    <button class="btn btn-warning" onclick="studentYearlyResult(${item.sid})">Yearly result</button>
+                                    <button class="btn btn-warning" onclick="studentYearlyResult(${item.sid})">Yearly result</button> 
+                                    <button class="btn btn-warning" onclick="viewStudentYearlyResultPopup(${item.sid})">View student yearly result</button>
                                 </td>
                             </tr>`;
                     tableBody.append(row);
@@ -156,6 +160,22 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         });
     }
 
+    function viewStudentResult(studentId) {
+        $.ajax({
+            url:  "<?= base_url('Student/viewStudentResult'); ?>",
+            type: 'GET',
+            data: { studentId: studentId },
+            success: function(response) {
+                $("#studentResultPopup").html(response);
+
+                $('#studentResultPopup').modal({
+                    backdrop: 'static',
+                    keyboard: false
+                }).modal('show');
+            }
+        });
+    }
+
     function studentYearlyResult(studentSid) {
         $.ajax({
             url:  "<?= base_url('Student/getStudentYearlyData'); ?>",
@@ -214,6 +234,49 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     var myModal = new bootstrap.Modal(document.getElementById('yearlyResultModal'));
                     myModal.show();
                 }
+            }
+        });
+    }
+
+    function viewStudentYearlyResultPopup(studentSid) {
+
+        $.ajax({
+            url: "<?= base_url('Student/viewStudentYearlyResultPopup'); ?>",
+            type: 'POST',
+            dataType: "html",
+            data: { 
+                studentSid: studentSid,
+                '<?= $this->security->get_csrf_token_name(); ?>': '<?= $this->security->get_csrf_hash(); ?>' 
+            },
+            cache: false,
+            success: function(response) { 
+                $("#studentYearlyResultPopup").html(response);
+
+                $('#studentYearlyResultPopup').modal({
+                    backdrop: 'static',
+                    keyboard: false
+                }).modal('show');
+            }
+        });
+    }
+
+    function addStudentPopup() {
+
+        $.ajax({
+            url: "<?= base_url('Student/ajaxSaveStudent'); ?>",
+            type: 'POST',
+            dataType: "html",
+            data: {
+                'csrf_token': "<?= $this->security->get_csrf_hash(); ?>"
+            },
+            cache: false,
+            success: function(response) {           
+                $("#addNewClinicPopup").html(response);
+
+                $('#addNewClinicPopup').modal({
+                    backdrop: 'static',
+                    keyboard: false
+                }).modal('show');
             }
         });
     }
