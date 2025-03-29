@@ -4,7 +4,7 @@
         <div class="modal-content">
             <!-- Modal Header -->
             <div class="modal-header">
-                <h5 class="modal-title" id="myModalLabel">Add New Student</h5>
+                <h5 class="modal-title" id="myModalLabel">Yearly Student Result</h5>
                 <button type="button" class="btn-close close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             
@@ -35,8 +35,8 @@
                             <td><?php echo $student['grade']; ?></td>
                             <td><?php echo $student['sam']; ?></td>
                             <td>
-                                <button class="btn btn-warning" onclick="studentResult(<?php echo $student['id']; ?>)">View result</button>
-                                <button class="btn btn-warning" onclick="viewStudentResult(<?php echo $student['id']; ?>)">View student result</button>
+                                <?php /* <button class="btn btn-warning" onclick="studentResult(<?php echo $student['id']; ?>)">View result</button> */ ?>
+                                <button class="btn btn-warning" onclick="viewstudentResult(<?php echo $student['id']; ?>)">View student result</button>
                             </td>
                         </tr>
                         <?php } ?>

@@ -42,7 +42,7 @@ class Student_model extends CI_Model {
     }
 
     public function getStudentYearlyData($where) {
-         $query = $this->db->get_where('students', $where);
+        $query = $this->db->get_where('students', $where);
         return $query->result_array();
     }
 

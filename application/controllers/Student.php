@@ -105,6 +105,14 @@ class Student extends CI_Controller {
         echo json_encode($data);
     }
 
+
+    public function showStudentData() {
+        $data['studentData'] = $this->Student_model->getStudentResults();
+
+        echo $this->load->view('show_student_data', $data, true);
+    }
+    
+
     public function getStudentData(){
         header('Content-Type: application/json');
         $studentId = $this->input->get('studentId'); 
@@ -172,30 +180,29 @@ class Student extends CI_Controller {
     }  
     
     public function viewStudentResult() {
-        $studentId = $this->input->get('studentId'); 
-
+        
+        $studentId = $this->input->post('studentId'); 
+        
         if(!empty($studentId)) {
             $where =  ['id' => $studentId];
             $resultData = $this->Student_model->getStudentData($where);
 
             if(!empty($resultData)) {
-                $studentData = [
-                    'success' => true,
-                    'data' => $resultData
+                $data = [
+                    'resultData' => $resultData
                 ];
             }
-
-           echo $this->load->view('modal/view_studnet_yearly_result_popup', $data, true);
         }
+        echo $this->load->view('modal/view_studnet_result_popup', $data, true);
     }
 
     public function viewStudentYearlyResultPopup()
     {
         $studentSid = $this->input->post('studentSid');
 
-        $where =  ['sid' => $studentSid];
+        $where = ['sid' => $studentSid];
         $studentData = $this->Student_model->getStudentYearlyData($where);
-
+       
         if(!empty($studentData)) {
             $totalPercentage = 0;
             $totalStudents = count($studentData);
@@ -216,7 +223,7 @@ class Student extends CI_Controller {
             'studentData' => $studentData,
             'averagePercentage' => $averagePercentage
         ];
-
+       
         echo $this->load->view('modal/view_studnet_yearly_result_popup', $data, true);
     }
     

@@ -47,11 +47,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         </div>
     <?php endif; ?>
 
-    <table class="table">
+    <table class="table" id="student_list">
         <thead>
             <tr>
-            <th scope="col">No.</th>
             <th scope="col">SID.</th>
+            <th scope="col">Name</th>
             <th scope="col">Action</th>
             </tr>
         </thead>
@@ -65,12 +65,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <?php $this->load->view('modal/add_student_modal'); ?>
 
 <!-- Result model code here. --->
-<?php $this->load->view('modal/result_modal'); ?>
+<?php /* $this->load->view('modal/result_modal'); */ ?>
 
 <!-- Yearly result model code here. -->
-<?php $this->load->view('modal/yearly_result_model'); ?>
+<?php /* $this->load->view('modal/yearly_result_model'); */ ?>
 
 <div class="modal hide fade px-3" id="addNewClinicPopup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"></div>
+
 <div class="modal hide fade px-3" id="studentYearlyResultPopup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"></div>
 <div class="modal hide fade px-3" id="studentResultPopup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"></div>
 
@@ -79,40 +80,26 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
-    $(document).ready(function(){
+
+    $(document).ready(function() {
         $.ajax({
-            url: "<?= base_url('Student/fetchData'); ?>",
+            url: "<?= base_url('Student/showStudentData'); ?>",
             type: 'GET',
-            dataType: 'json',
+            dataType: 'html', 
             success: function(response) {
-                let tableBody = $('table tbody');
+                let tableBody = $('#student_list tbody');
                 tableBody.empty();
 
-                $.each(response, function(index, item) {
-                    let row = `<tr>
-                                <th scope="row">${item.id}</th>
-                                <th>${item.sid}</th>
-                                <td>${item.name}</td>
-                                <td>
-                                   <?php /* <button class="btn btn-warning" onclick="studentResult(${item.id})">View result</button> */ ?>
-                                    <button class="btn btn-warning" onclick="studentYearlyResult(${item.sid})">Yearly result</button> 
-                                    <button class="btn btn-warning" onclick="viewStudentYearlyResultPopup(${item.sid})">View student yearly result</button>
-                                </td>
-                            </tr>`;
-                    tableBody.append(row);
-                });
-                if (response.length === 0) {
-                    let noDataRow = `<tr>
-                                        <td colspan="9" class="text-center">No data found</td>
-                                    </tr>`;
-                    tableBody.append(noDataRow);
-                }
+                if (response.trim()) {
+                    tableBody.append(response);
+                } 
             },
             error: function() {
-                alert('Failed to fetch data.');
+                alert("An error occurred while fetching student data.");
             }
         });
     });
+
 </script>
 
 <script>
@@ -130,42 +117,49 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         myModal.show();
     }
 
-    function studentResult(studentId) {
-        
-        $.ajax({
-            url:  "<?= base_url('Student/getStudentData'); ?>",
-            type: 'GET',
-            data: { studentId: studentId },
-            success: function(response) {
-                console.log(response)
-                if (response.success && response.data) {
-                    document.getElementById("studentId").innerText = "Student ID: " + studentId;
-                    document.getElementById("studentName").innerText = "Name: " + response.data.name;
-                    document.getElementById("studentsub1").innerText = "Subject 1: " + response.data.sub1;
-                    document.getElementById("studentsub2").innerText = "Subject 2: " + response.data.sub2;
-                    document.getElementById("studentsub3").innerText = "Subject 3: " + response.data.sub3;
-                    document.getElementById("total").innerText = "total: " + response.data.total;
-                    document.getElementById("percentage").innerText = "Percentage: " + response.data.percentage;
-                    document.getElementById("grade").innerText = "Grade: " + response.data.grade;
+    // ----------------Old code of student result
+    // function studentResult(studentId) {
+    //     // alert(studentId);
+    //     $.ajax({
+    //         url:  "<?= base_url('Student/getStudentData'); ?>",
+    //         type: 'GET',
+    //         data: { studentId: studentId },
+    //         success: function(response) {
+    //             console.log(response)
+    //             if (response.success && response.data) {
+    //                 document.getElementById("studentId").innerText = "Student ID: " + studentId;
+    //                 document.getElementById("studentName").innerText = "Name: " + response.data.name;
+    //                 document.getElementById("studentsub1").innerText = "Subject 1: " + response.data.sub1;
+    //                 document.getElementById("studentsub2").innerText = "Subject 2: " + response.data.sub2;
+    //                 document.getElementById("studentsub3").innerText = "Subject 3: " + response.data.sub3;
+    //                 document.getElementById("total").innerText = "total: " + response.data.total;
+    //                 document.getElementById("percentage").innerText = "Percentage: " + response.data.percentage;
+    //                 document.getElementById("grade").innerText = "Grade: " + response.data.grade;
 
-                    var myModal = new bootstrap.Modal(document.getElementById('resultModal'));
-                    myModal.show();
-                } else {
-                    alert("Failed to fetch student data");
-                }
-            },
-            error: function() {
-                alert("An error occurred while fetching data");
-            }
-        });
-    }
+    //                 var myModal = new bootstrap.Modal(document.getElementById('resultModal'));
+    //                 myModal.show();
+    //             } else {
+    //                 alert("Failed to fetch student data");
+    //             }
+    //         },
+    //         error: function() {
+    //             alert("An error occurred while fetching data");
+    //         }
+    //     });
+    // }
 
-    function viewStudentResult(studentId) {
+    function viewstudentResultPopup(studentId) {
         $.ajax({
             url:  "<?= base_url('Student/viewStudentResult'); ?>",
-            type: 'GET',
-            data: { studentId: studentId },
+            type: 'POST',
+            dataType: "html",
+            data: { 
+                studentId: studentId,
+                '<?= $this->security->get_csrf_token_name(); ?>': '<?= $this->security->get_csrf_hash(); ?>' 
+            },
+            cache: false,
             success: function(response) {
+                console.log(response);
                 $("#studentResultPopup").html(response);
 
                 $('#studentResultPopup').modal({
@@ -176,70 +170,71 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         });
     }
 
-    function studentYearlyResult(studentSid) {
-        $.ajax({
-            url:  "<?= base_url('Student/getStudentYearlyData'); ?>",
-            type: 'GET',
-            data: { studentSid: studentSid },
-            success: function(response) {
-                console.log(response);
+    // ----------------old code for open yearly mode 
+    // function studentYearlyResult(studentSid) {
+    //     $.ajax({
+    //         url:  "<?= base_url('Student/getStudentYearlyData'); ?>",
+    //         type: 'GET',
+    //         data: { studentSid: studentSid },
+    //         success: function(response) {
+    //             console.log(response);
                 
-                if (response.success) {
+    //             if (response.success) {
 
-                    var table = '<table class="table table-bordered">';
-                    table += '<thead><tr>';
-                    table += '<th>Student ID</th>';
-                    table += '<th>Name</th>';
-                    table += '<th>Subject 1</th>';
-                    table += '<th>Subject 2</th>';
-                    table += '<th>Subject 3</th>';
-                    table += '<th>Total</th>';
-                    table += '<th>Percentage</th>';
-                    table += '<th>Grade</th>';
-                    table += '<th>SEM</th>';
-                    table += '<th>Action</th>';
-                    table += '</tr></thead>';
-                    table += '<tbody>';
+    //                 var table = '<table class="table table-bordered">';
+    //                 table += '<thead><tr>';
+    //                 table += '<th>Student ID</th>';
+    //                 table += '<th>Name</th>';
+    //                 table += '<th>Subject 1</th>';
+    //                 table += '<th>Subject 2</th>';
+    //                 table += '<th>Subject 3</th>';
+    //                 table += '<th>Total</th>';
+    //                 table += '<th>Percentage</th>';
+    //                 table += '<th>Grade</th>';
+    //                 table += '<th>SEM</th>';
+    //                 table += '<th>Action</th>';
+    //                 table += '</tr></thead>';
+    //                 table += '<tbody>';
 
-                    $.each(response.data, function(index, item) {
-                        var row = `<tr>
-                                    <td>${item.sid}</td>
-                                    <td>${item.name}</td>
-                                    <td>${item.sub1}</td>
-                                    <td>${item.sub2}</td>
-                                    <td>${item.sub3}</td>
-                                    <td>${item.total}</td>
-                                    <td>${item.percentage}</td>
-                                    <td>${item.grade}</td>
-                                    <td>${item.sam}</td>
-                                    <td>
-                                        <button class="btn btn-warning" onclick="studentResult(${item.id})">View result</button>
-                                    </td>
-                                </tr>`;
-                        table += row;
-                    });
+    //                 $.each(response.data, function(index, item) {
+    //                     var row = `<tr>
+    //                                 <td>${item.sid}</td>
+    //                                 <td>${item.name}</td>
+    //                                 <td>${item.sub1}</td>
+    //                                 <td>${item.sub2}</td>
+    //                                 <td>${item.sub3}</td>
+    //                                 <td>${item.total}</td>
+    //                                 <td>${item.percentage}</td>
+    //                                 <td>${item.grade}</td>
+    //                                 <td>${item.sam}</td>
+    //                                 <td>
+    //                                     <button class="btn btn-warning" onclick="studentResult(${item.id})">View result</button>
+    //                                 </td>
+    //                             </tr>`;
+    //                     table += row;
+    //                 });
 
-                    table += '</tbody></table>';
+    //                 table += '</tbody></table>';
 
-                    // Insert the table into the modal
-                    document.getElementById("modalContent").innerHTML = table;
-                    let avgPercentage = response.yearlyAvgPercentages;
-                    $('#avg').html(`<p><strong>Average Percentage: </strong>${avgPercentage}%</p>`);
+    //                 // Insert the table into the modal
+    //                 document.getElementById("modalContent").innerHTML = table;
+    //                 let avgPercentage = response.yearlyAvgPercentages;
+    //                 $('#avg').html(`<p><strong>Average Percentage: </strong>${avgPercentage}%</p>`);
 
-                    // Show the modal
-                    var myModal = new bootstrap.Modal(document.getElementById('yearlyResultModal'));
-                    myModal.show();
-                } else {
-                    document.getElementById("modalContent").innerHTML = "No data found for Student ID: " + studentSid;
-                    var myModal = new bootstrap.Modal(document.getElementById('yearlyResultModal'));
-                    myModal.show();
-                }
-            }
-        });
-    }
+    //                 // Show the modal
+    //                 var myModal = new bootstrap.Modal(document.getElementById('yearlyResultModal'));
+    //                 myModal.show();
+    //             } else {
+    //                 document.getElementById("modalContent").innerHTML = "No data found for Student ID: " + studentSid;
+    //                 var myModal = new bootstrap.Modal(document.getElementById('yearlyResultModal'));
+    //                 myModal.show();
+    //             }
+    //         }
+    //     });
+    // }
 
     function viewStudentYearlyResultPopup(studentSid) {
-
+ 
         $.ajax({
             url: "<?= base_url('Student/viewStudentYearlyResultPopup'); ?>",
             type: 'POST',
