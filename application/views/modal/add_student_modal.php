@@ -34,17 +34,17 @@
 
                     <div class="mb-3">
                         <label for="studentAge" class="form-label">Subject 1</label>
-                        <input type="number" class="form-control" id="sub1" name="sub1" required>
+                        <input type="number" class="form-control" min="0" max="100" id="sub1" name="sub1" required>
                         <small class="text-danger" id="subject1Error"></small>
                     </div>
                     <div class="mb-3">
                         <label for="studentAge" class="form-label">Subject 2</label>
-                        <input type="number" class="form-control" id="sub2" name="sub2" required>
+                        <input type="number" class="form-control" min="0" id="sub2" max="100" name="sub2" required>
                         <small class="text-danger" id="subject2Error"></small>
                     </div>
                     <div class="mb-3">
                         <label for="studentAge" class="form-label">Subject 3</label>
-                        <input type="number" class="form-control" id="sub3" name="sub3" required>
+                        <input type="number" class="form-control" min="0" id="sub3" max="100" name="sub3" required>
                         <small class="text-danger" id="subject3Error"></small>
                     </div>
                     
