@@ -64,14 +64,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <!-- Add student model code here. -->
 <?php $this->load->view('modal/add_student_modal'); ?>
 
-<!-- Result model code here. --->
-<?php /* $this->load->view('modal/result_modal'); */ ?>
-
-<!-- Yearly result model code here. -->
-<?php /* $this->load->view('modal/yearly_result_model'); */ ?>
-
 <div class="modal hide fade px-3" id="addNewClinicPopup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"></div>
-
 <div class="modal hide fade px-3" id="studentYearlyResultPopup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"></div>
 <div class="modal hide fade px-3" id="studentResultPopup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"></div>
 
@@ -118,35 +111,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     }
 
     // ----------------Old code of student result
-    // function studentResult(studentId) {
-    //     // alert(studentId);
-    //     $.ajax({
-    //         url:  "<?= base_url('Student/getStudentData'); ?>",
-    //         type: 'GET',
-    //         data: { studentId: studentId },
-    //         success: function(response) {
-    //             console.log(response)
-    //             if (response.success && response.data) {
-    //                 document.getElementById("studentId").innerText = "Student ID: " + studentId;
-    //                 document.getElementById("studentName").innerText = "Name: " + response.data.name;
-    //                 document.getElementById("studentsub1").innerText = "Subject 1: " + response.data.sub1;
-    //                 document.getElementById("studentsub2").innerText = "Subject 2: " + response.data.sub2;
-    //                 document.getElementById("studentsub3").innerText = "Subject 3: " + response.data.sub3;
-    //                 document.getElementById("total").innerText = "total: " + response.data.total;
-    //                 document.getElementById("percentage").innerText = "Percentage: " + response.data.percentage;
-    //                 document.getElementById("grade").innerText = "Grade: " + response.data.grade;
-
-    //                 var myModal = new bootstrap.Modal(document.getElementById('resultModal'));
-    //                 myModal.show();
-    //             } else {
-    //                 alert("Failed to fetch student data");
-    //             }
-    //         },
-    //         error: function() {
-    //             alert("An error occurred while fetching data");
-    //         }
-    //     });
-    // }
 
     function viewstudentResultPopup(studentId) {
         $.ajax({
@@ -169,69 +133,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             }
         });
     }
-
-    // ----------------old code for open yearly mode 
-    // function studentYearlyResult(studentSid) {
-    //     $.ajax({
-    //         url:  "<?= base_url('Student/getStudentYearlyData'); ?>",
-    //         type: 'GET',
-    //         data: { studentSid: studentSid },
-    //         success: function(response) {
-    //             console.log(response);
-                
-    //             if (response.success) {
-
-    //                 var table = '<table class="table table-bordered">';
-    //                 table += '<thead><tr>';
-    //                 table += '<th>Student ID</th>';
-    //                 table += '<th>Name</th>';
-    //                 table += '<th>Subject 1</th>';
-    //                 table += '<th>Subject 2</th>';
-    //                 table += '<th>Subject 3</th>';
-    //                 table += '<th>Total</th>';
-    //                 table += '<th>Percentage</th>';
-    //                 table += '<th>Grade</th>';
-    //                 table += '<th>SEM</th>';
-    //                 table += '<th>Action</th>';
-    //                 table += '</tr></thead>';
-    //                 table += '<tbody>';
-
-    //                 $.each(response.data, function(index, item) {
-    //                     var row = `<tr>
-    //                                 <td>${item.sid}</td>
-    //                                 <td>${item.name}</td>
-    //                                 <td>${item.sub1}</td>
-    //                                 <td>${item.sub2}</td>
-    //                                 <td>${item.sub3}</td>
-    //                                 <td>${item.total}</td>
-    //                                 <td>${item.percentage}</td>
-    //                                 <td>${item.grade}</td>
-    //                                 <td>${item.sam}</td>
-    //                                 <td>
-    //                                     <button class="btn btn-warning" onclick="studentResult(${item.id})">View result</button>
-    //                                 </td>
-    //                             </tr>`;
-    //                     table += row;
-    //                 });
-
-    //                 table += '</tbody></table>';
-
-    //                 // Insert the table into the modal
-    //                 document.getElementById("modalContent").innerHTML = table;
-    //                 let avgPercentage = response.yearlyAvgPercentages;
-    //                 $('#avg').html(`<p><strong>Average Percentage: </strong>${avgPercentage}%</p>`);
-
-    //                 // Show the modal
-    //                 var myModal = new bootstrap.Modal(document.getElementById('yearlyResultModal'));
-    //                 myModal.show();
-    //             } else {
-    //                 document.getElementById("modalContent").innerHTML = "No data found for Student ID: " + studentSid;
-    //                 var myModal = new bootstrap.Modal(document.getElementById('yearlyResultModal'));
-    //                 myModal.show();
-    //             }
-    //         }
-    //     });
-    // }
 
     function viewStudentYearlyResultPopup(studentSid) {
  

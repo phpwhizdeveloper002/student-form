@@ -182,7 +182,7 @@ class Student extends CI_Controller {
     public function viewStudentResult() {
         
         $studentId = $this->input->post('studentId'); 
-        
+
         if(!empty($studentId)) {
             $where =  ['id' => $studentId];
             $resultData = $this->Student_model->getStudentData($where);

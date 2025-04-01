@@ -51,6 +51,7 @@
         </div>
     </div>
 </div>
+<div class="modal hide fade px-3" id="studentResultPopup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"></div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -60,4 +61,29 @@
             location.reload();
         });
     });
+</script>
+
+<script>
+    function viewstudentResult(studentId) {
+        // alert('asdfasdf');
+        $.ajax({
+            url:  "<?= base_url('Student/viewStudentResult'); ?>",
+            type: 'POST',
+            dataType: "html",
+            data: { 
+                studentId: studentId,
+                '<?= $this->security->get_csrf_token_name(); ?>': '<?= $this->security->get_csrf_hash(); ?>' 
+            },
+            cache: false,
+            success: function(response) {
+                $("#studentResultPopup").html(response);
+
+                var myModal = new bootstrap.Modal(document.getElementById('studentResultPopup'), {
+                    backdrop: 'static',
+                    keyboard: false
+                });
+                myModal.show();
+            }
+        });
+    }
 </script>
