@@ -2,8 +2,8 @@
 <div class="" id="addNewClinicPopup" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
+            <h2>Add new mode submit form</h2>
             <div class="container">
-                <h2>Add student form</h2>
             <form id="demoForm" method="POST">
                 <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
                     <div class="mb-3">
@@ -13,7 +13,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="sid" class="form-label">SID</label><span class="text-danger">*Please remember this sid number for register with other SEM</span>
-                        <input type="number" class="form-control" id="sid" name="sid" required 
+                        <input type="number" class="form-control" id="sid" name="sid" value="233324234234" required 
                             minlength="12" maxlength="12" oninput="validateSID(this)">
                             <small class="text-danger" id="sidError"></small>
                         <small class="text-danger" id="sidError"></small>
@@ -31,26 +31,24 @@
 
                     <div class="mb-3">
                         <label for="studentAge" class="form-label">Subject 1</label>
-                        <input type="number" class="form-control" id="sub1" name="sub1" required>
+                        <input type="number" class="form-control" id="sub1" name="sub1" value="45" required>
                         <small class="text-danger" id="subject1Error"></small>
                     </div>
                     <div class="mb-3">
                         <label for="studentAge" class="form-label">Subject 2</label> 
-                        <input type="number" class="form-control" id="sub2" name="sub2" required>
+                        <input type="number" class="form-control" id="sub2" name="sub2" value="45" required>
                         <small class="text-danger" id="subject2Error"></small>
                     </div>
                     <div class="mb-3">
                         <label for="studentAge" class="form-label">Subject 3</label>
-                        <input type="number" class="form-control" id="sub3" name="sub3" required>
+                        <input type="number" class="form-control" id="sub3" name="sub3" value="34" required>
                         <small class="text-danger" id="subject3Error"></small>
                     </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
             </form>
 
             </div>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         </div>
     </div>
 </div>
@@ -66,7 +64,7 @@
             e.preventDefault();
 
             let formData = new FormData(this);
-            
+
             $.ajax({
                 url: "<?= base_url('Student/demoFormSave') ?>",
                 type: "POST",
