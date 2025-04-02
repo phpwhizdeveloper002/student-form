@@ -61,6 +61,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     </table>
 </div>
 
+<!-- Add student model code here. -->
+<?php $this->load->view('modal/add_student_modal'); ?>
+
 <div class="modal hide fade px-3" id="addNewClinicPopup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"></div>
 <div class="modal hide fade px-3" id="studentYearlyResultPopup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"></div>
 <div class="modal hide fade px-3" id="studentResultPopup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"></div>
