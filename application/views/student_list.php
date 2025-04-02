@@ -32,7 +32,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <div class="container">
     <div class="text-end">
         <button class="btn btn-success" onclick="addNewStudentPopup()">Add student</button>
-        <!-- <button class="btn btn-success" onclick="addStudentPopup()">Add New student</button> -->
+        <button class="btn btn-success" onclick="addStudentPopup()">Add New student</button>
     </div>
 
     <?php if ($this->session->flashdata('error_message')): ?>
@@ -163,7 +163,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             type: 'POST',
             dataType: "html",
             data: {
-                'csrf_token': "<?= $this->security->get_csrf_hash(); ?>"
+                '<?= $this->security->get_csrf_token_name(); ?>': '<?= $this->security->get_csrf_hash(); ?>' 
             },
             cache: false,
             success: function(response) {           
@@ -176,6 +176,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             }
         });
     }
+    
 </script>
 </body>
 </html>
