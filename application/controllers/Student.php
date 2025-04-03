@@ -251,14 +251,6 @@ class Student extends CI_Controller {
 
     public function demoFormSave()
     {
-
-        // $data = $this->input->post();
-
-        // echo "<pre>";
-        // print_r($data);
-        // echo "</pre>";
-        // die();
-
         $this->load->library('form_validation');
 
         // Set validation rules
@@ -270,9 +262,8 @@ class Student extends CI_Controller {
         $this->form_validation->set_rules('sub3', 'Subject 3', 'required|numeric');
 
         if ($this->form_validation->run() == FALSE) {
-            $errors = validation_errors(); // Get errors as a string
+            $errors = validation_errors();
     
-            // Store errors in session
             $this->session->set_flashdata('error_message', $errors);
     
             echo json_encode(['errors' => true]); // Return error response
@@ -280,10 +271,6 @@ class Student extends CI_Controller {
         }
     
         $formData = $this->input->post();
-        // echo "<pre>";
-        // print_r($formData);
-        // echo "</pre>";
-        // die();
 
         if(!empty($formData)){
 
