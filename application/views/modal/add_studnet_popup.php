@@ -46,7 +46,7 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="submit" class="btn btn-primary">Submit</button>
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-secondary close" data-bs-dismiss="modal">Close</button>
                             </div>
                     </form>
 
@@ -89,6 +89,14 @@
                     alert("Something went wrong. Please try again.");
                 }
             });
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function() {
+        $('.close').on('click', function() {
+            location.reload();
         });
     });
 </script>
