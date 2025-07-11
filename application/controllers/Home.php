@@ -20,6 +20,11 @@ class Home extends CI_Controller {
         $this->load->view('texteditor');
     }
 
+    public function resizeImageDemo()
+    {
+        $this->load->view('resizeImageDemo');
+    }
+
 
     // Without ajax form submit
 
@@ -95,7 +100,70 @@ class Home extends CI_Controller {
         }
     }
     
-    
-    
+    // public function storeResizedImage()
+    // {
+    //     header('Content-Type: application/json');
+    //     print_r($_POST);  // Or use $this->input->post()
+    //     die();
+    // }
+
+    public function storeResizedImage()
+    {
+        $base64Image = $this->input->post('resizedImage');
+        $width = $this->input->post('width');
+        $height = $this->input->post('height');
+
+        // Validate base64
+        if (preg_match('/^data:image\/(\w+);base64,/', $base64Image, $type)) {
+            $data = substr($base64Image, strpos($base64Image, ',') + 1);
+            $data = base64_decode($data);
+            $extension = strtolower($type[1]); // png, jpg, etc.
+
+            // Only allow image types
+            if (!in_array($extension, ['jpg', 'jpeg', 'png', 'gif'])) {
+                echo json_encode(['status' => 'error', 'message' => 'Unsupported image type']);
+                return;
+            }
+
+            // Save path
+            $folderPath = FCPATH . 'uploads/resized/';
+            if (!file_exists($folderPath)) {
+                mkdir($folderPath, 0777, true);
+            }
+
+            // Create unique file
+            $fileName = 'resized_' . uniqid() . '.' . $extension;
+            $filePath = $folderPath . $fileName;
+            $fileUrl = 'uploads/resized/' . $fileName;
+
+            $data = [
+                'image'  => $fileUrl,
+                'height' => $height,
+                'width'  => $width
+            ];
+            
+            $this->db->insert('image_resizes', $data);
+
+            // Save image
+            if (file_put_contents($filePath, $data)) {
+                echo json_encode([
+                    'status' => 'success',
+                    'message' => 'Image saved successfully.',
+                    'image_path' => $fileUrl
+                ]);
+            } else {
+                echo json_encode([
+                    'status' => 'error',
+                    'message' => 'Failed to save image.'
+                ]);
+            }
+        } else {
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'Invalid base64 image data.'
+            ]);
+        }
+    }
+
 
 }
