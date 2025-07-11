@@ -15,6 +15,11 @@ class Home extends CI_Controller {
         $this->load->view('register');
     }
 
+    public function textEditor()
+    {
+        $this->load->view('texteditor');
+    }
+
 
     // Without ajax form submit
 
