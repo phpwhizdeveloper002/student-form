@@ -193,8 +193,15 @@
     });
 
     applyBtn.addEventListener("click", function () {
+
         let width = parseInt(widthInput.value);
         let height = parseInt(heightInput.value);
+
+        if(widthInput.value == '' || heightInput.value == ''){
+          alert('Please enter valid width / Height for image resizeing');
+          return false;
+        }
+
         downloadBtn.style.display = 'block';
 
         if (keepAspect.checked) {
@@ -233,8 +240,11 @@
             processData: false,
             contentType: false,
             success: function(response) {
+                if(response.status == 'error'){
+                  alert('Resized image uploaded successfully.');
+                }
                 alert('Resized image uploaded successfully.');
-                console.log(response);
+                window.location.reload();
             },
             error: function(xhr, status, error) {
                 if (xhr.status === 403 && xhr.responseText.includes('exceeds the limit')) {
